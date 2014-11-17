@@ -11,12 +11,21 @@ import java.util.concurrent.Future;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FuturesInvokeAll {
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.Futures;
 
+public class FuturesGuava {
+	
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(FuturesInvokeAll.class);
+			.getLogger(FuturesGuava.class);
 
 	private static final ExecutorService pool = Executors.newCachedThreadPool();
+	
+	// improve standard threadpool with guava
+	public static final ListeningExecutorService guavaPool = MoreExecutors.listeningDecorator(pool);
 
 	private static final int NUMBER_OF_TASKS = 10;
 	
@@ -35,24 +44,35 @@ public class FuturesInvokeAll {
 			});
 		}
 		
-		// invoke all callables at once
-		List<Future<Integer>> futures = null;
+		List<ListenableFuture<Integer>> futures = null;
+		
 		try {
-			futures = pool.invokeAll(tasks);
-			for (Future<Integer> f : futures) {
-				// what if first future is the slowest ==> ExecutorCompletionService
-				LOGGER.info("value of futures: " + f.get());  // blocking :(
+			futures = (List) guavaPool.invokeAll(tasks);
+			
+			for (ListenableFuture<Integer> f : futures) {
+				Futures.addCallback(f, new FutureCallback<Integer>() {
+					
+					@Override
+					public void onFailure(Throwable arg0) {
+						LOGGER.warn("failure during future execution");
+					}
+					
+					@Override
+					public void onSuccess(Integer arg0) {
+						LOGGER.info("number = " + arg0);
+					}
+					
+				});
 			}
 		} catch (InterruptedException e) {
-			LOGGER.error("future.get() interrupted: ", e);
-		} catch (ExecutionException e) {
-			LOGGER.error("future.get() executionException: ", e);
+			LOGGER.error("invokeAll() interrupted: ", e);
 		} finally {
 			// cancel all futures, for successful futures cancellation has no impact
 			for (Future<Integer> f : futures) {
 				f.cancel(true);
 			}
-			pool.shutdown();
+			 guavaPool.shutdown();
 		}
 	}
+
 }

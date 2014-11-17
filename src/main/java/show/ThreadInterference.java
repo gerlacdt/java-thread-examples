@@ -6,9 +6,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Inference {
+public class ThreadInterference {
 	
-	private static Logger LOGGER = LoggerFactory.getLogger(Inference.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(ThreadInterference.class);
 	
 	private static final int NUMBER_OF_THREADS = 4;
 	private static final int NUMBER_OF_ITERATIONS = 10000;
