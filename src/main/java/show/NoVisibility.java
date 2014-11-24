@@ -24,7 +24,7 @@ public class NoVisibility extends Thread {
     public void run() {
         while (keepRunning) {
         	// I/O is too slow for showcase
-        	// LOGGER.info(System.currentTimeMillis() + ": " + keepRunning);
+        	LOGGER.info(System.currentTimeMillis() + ": " + keepRunning);
         }
     }
 }

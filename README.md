@@ -5,10 +5,20 @@ This code belongs to a short presentation for showing some java thread specific 
 ## Contents
 
 1. Start/Run threads (Runnable-Interface)
-2. Thread Interference (Synchronization / Atomic variables)
+  * StartThread.java
+2. Thread Interference (Visiblity, Synchronization / Atomic variables)
+  * NoVisiblity (Thread Visibility, volatile etc.)
+  * ThreadInterference (Counter, synchronized, AtomicInteger)
+  * CorruptedDateFormatter (SimpleDateFormatter not thread safe)
+  * ImmutableMain (immutable classes are thread safe)
 3. Deadlocks
-4. Executors(Service) / ThreadPools
-5. Futures (Callables)
+4. Executors(Service) / ThreadPools with Futures
+  * SimpleExecutors.java
+  * Futures (with Callables)
+  * FuturesInvokeAll
+  * FuturesTimeOut
+  * FutureCompletionService
+  * FutureGuava
 
 
 ## License

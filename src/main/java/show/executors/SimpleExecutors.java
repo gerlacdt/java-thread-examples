@@ -17,7 +17,7 @@ public class SimpleExecutors {
 	
 	private static final CounterAtomic counter = new CounterAtomic();
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		
 		fixedExecutor.execute(new Runnable() {
 
@@ -30,5 +30,4 @@ public class SimpleExecutors {
 		// 0 ?? why?? 
 		LOGGER.info("counter = " + counter.getCounter());
 	}
-
 }

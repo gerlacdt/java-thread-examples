@@ -17,6 +17,8 @@ public class CorruptedDateFormatter {
 
 	private static final int NUMBER_OF_THREADS = 4;
 
+	
+	// NOT Thread-safe
 	private static final DateFormat formatter = new SimpleDateFormat(
 			"yyyy-MM-dd");
 

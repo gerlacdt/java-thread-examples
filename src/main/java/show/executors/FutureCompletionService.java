@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -11,10 +12,10 @@ import java.util.concurrent.Future;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FuturesInvokeAll {
+public class FutureCompletionService {
 
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(FuturesInvokeAll.class);
+			.getLogger(FutureCompletionService.class);
 
 	private static final ExecutorService pool = Executors.newCachedThreadPool();
 
@@ -22,38 +23,39 @@ public class FuturesInvokeAll {
 
 	public static void main(String[] args) {
 
-		// create callables
-		List<Callable<Integer>> tasks = new ArrayList<Callable<Integer>>();
+		ExecutorCompletionService<Integer> ecs = new ExecutorCompletionService<Integer>(
+				pool);
+
+		List<Future<Integer>> futures = new ArrayList<Future<Integer>>();
 
 		// add long running task at first
-		tasks.add(new Callable<Integer>() {
+		futures.add(ecs.submit(new Callable<Integer>() {
 
 			@Override
 			public Integer call() throws Exception {
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				return 1;
 			}
 
-		});
+		}));
 
+		// add short running task at last
 		for (int i = 0; i < NUMBER_OF_TASKS; i++) {
-			tasks.add(new Callable<Integer>() {
+			futures.add(ecs.submit(new Callable<Integer>() {
 
 				@Override
 				public Integer call() {
 					return 42;
 				}
-			});
+			}));
 		}
 
-		// invoke all callables at once
-		List<Future<Integer>> futures = null;
 		try {
-			futures = pool.invokeAll(tasks);
-			for (Future<Integer> f : futures) {
-				// what if first future is the slowest ->
-				// ExecutorCompletionService or Future callbacks
-				LOGGER.info("value of futures: " + f.get()); // blocking :(
+
+			for (int i = 0; i < NUMBER_OF_TASKS + 1; i++) {
+				Integer result = ecs.take().get(); // blocks only as long as the
+													// first result is ready
+				LOGGER.info("value of futures: " + result);
 			}
 		} catch (InterruptedException e) {
 			LOGGER.error("future.get() interrupted: ", e);
@@ -68,4 +70,5 @@ public class FuturesInvokeAll {
 			pool.shutdown();
 		}
 	}
+
 }
