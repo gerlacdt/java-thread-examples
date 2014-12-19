@@ -3,7 +3,7 @@ package show.executors;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -12,10 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-import com.google.common.util.concurrent.Futures;
 
 public class FuturesGuava {
 	
@@ -27,12 +27,25 @@ public class FuturesGuava {
 	// improve standard threadpool with guava
 	public static final ListeningExecutorService guavaPool = MoreExecutors.listeningDecorator(pool);
 
-	private static final int NUMBER_OF_TASKS = 10;
+	private static final int NUMBER_OF_TASKS = 3;
 	
-	public static void main(String[] args) {
+	private static final CountDownLatch latch = new CountDownLatch(1);
+	
+	public static void main(String[] args) throws InterruptedException {
 		
 		// create callables
 		List<Callable<Integer>> tasks = new ArrayList<Callable<Integer>>();
+		
+		tasks.add(new Callable<Integer>() {
+
+			@Override
+			public Integer call() throws Exception {
+				Thread.sleep(2000);
+				latch.countDown();
+				return 1;
+			}
+			
+		});
 
 		for (int i = 0; i < NUMBER_OF_TASKS; i++) {
 			tasks.add(new Callable<Integer>() {
@@ -44,10 +57,12 @@ public class FuturesGuava {
 			});
 		}
 		
-		List<ListenableFuture<Integer>> futures = null;
+		List<ListenableFuture<Integer>> futures = new ArrayList<ListenableFuture<Integer>>();
 		
 		try {
-			futures = (List) guavaPool.invokeAll(tasks);
+			for (Callable<Integer> t : tasks) {
+				futures.add(guavaPool.submit(t));
+			}
 			
 			for (ListenableFuture<Integer> f : futures) {
 				Futures.addCallback(f, new FutureCallback<Integer>() {
@@ -64,15 +79,16 @@ public class FuturesGuava {
 					
 				});
 			}
-		} catch (InterruptedException e) {
-			LOGGER.error("invokeAll() interrupted: ", e);
 		} finally {
 			// cancel all futures, for successful futures cancellation has no impact
+			latch.await();
 			for (Future<Integer> f : futures) {
 				f.cancel(true);
 			}
 			 guavaPool.shutdown();
 		}
 	}
+
+
 
 }

@@ -1,4 +1,4 @@
-package show;
+package show.model;
 
 public class CounterSync {
 	

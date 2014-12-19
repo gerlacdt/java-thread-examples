@@ -26,7 +26,7 @@ public class FuturesGuavaCollectAll {
 	// improve standard threadpool with guava
 	public static final ListeningExecutorService guavaPool = MoreExecutors.listeningDecorator(pool);
 
-	private static final int NUMBER_OF_TASKS = 10;
+	private static final int NUMBER_OF_TASKS = 3;
 	
 	public static void main(String[] args) {
 		

@@ -6,6 +6,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import show.model.Counter;
+import show.model.CounterAtomic;
+import show.model.CounterSync;
+
 public class ThreadInterference {
 	
 	private static Logger LOGGER = LoggerFactory.getLogger(ThreadInterference.class);

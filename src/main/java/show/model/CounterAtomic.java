@@ -1,4 +1,4 @@
-package show;
+package show.model;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
