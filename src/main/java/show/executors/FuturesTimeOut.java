@@ -45,6 +45,7 @@ public class FuturesTimeOut {
 		} finally {
 			// cancel futures, for successful futures cancellation has no impact
 			future.cancel(true);
+			LOGGER.info("cancel future.... but does not work.... :(");
 			pool.shutdown();
 		}
 	}

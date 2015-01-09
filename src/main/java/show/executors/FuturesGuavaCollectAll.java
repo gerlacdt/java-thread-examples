@@ -46,7 +46,7 @@ public class FuturesGuavaCollectAll {
 		List<ListenableFuture<Integer>> futures = null;
 		
 		try {
-			futures = (List) guavaPool.invokeAll(tasks);
+			futures = (List) guavaPool.invokeAll(tasks);  // blocking
 			List<Integer> numbers = Futures.successfulAsList(futures).get();
 			for (Integer i : numbers) {
 				LOGGER.info("number = " + i);

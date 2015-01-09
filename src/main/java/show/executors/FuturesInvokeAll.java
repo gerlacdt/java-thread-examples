@@ -36,6 +36,7 @@ public class FuturesInvokeAll {
 
 		});
 
+		// add short running tasks
 		for (int i = 0; i < NUMBER_OF_TASKS; i++) {
 			tasks.add(new Callable<Integer>() {
 
@@ -49,11 +50,10 @@ public class FuturesInvokeAll {
 		// invoke all callables at once
 		List<Future<Integer>> futures = null;
 		try {
-			futures = pool.invokeAll(tasks);
+			futures = pool.invokeAll(tasks);  // blocking
+			LOGGER.info("after invokeAll()");
 			for (Future<Integer> f : futures) {
-				// what if first future is the slowest ->
-				// ExecutorCompletionService or Future callbacks
-				LOGGER.info("value of futures: " + f.get()); // blocking :(
+				LOGGER.info("value of futures: " + f.get());
 			}
 		} catch (InterruptedException e) {
 			LOGGER.error("future.get() interrupted: ", e);

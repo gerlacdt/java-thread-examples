@@ -36,17 +36,20 @@ public class FuturesGuava {
 		// create callables
 		List<Callable<Integer>> tasks = new ArrayList<Callable<Integer>>();
 		
+		
+		// add long running task
 		tasks.add(new Callable<Integer>() {
 
 			@Override
 			public Integer call() throws Exception {
-				Thread.sleep(2000);
+				Thread.sleep(5000);
 				latch.countDown();
 				return 1;
 			}
 			
 		});
 
+		// add short running tasks
 		for (int i = 0; i < NUMBER_OF_TASKS; i++) {
 			tasks.add(new Callable<Integer>() {
 
@@ -80,8 +83,10 @@ public class FuturesGuava {
 				});
 			}
 		} finally {
-			// cancel all futures, for successful futures cancellation has no impact
+			// wait as long as futures run (so main thread does not exit)
 			latch.await();
+			
+			// cancel all futures, for successful futures cancellation has no impact
 			for (Future<Integer> f : futures) {
 				f.cancel(true);
 			}

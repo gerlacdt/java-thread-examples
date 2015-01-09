@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import show.model.Counter;
 import show.model.CounterAtomic;
+import show.model.CounterLock;
 import show.model.CounterSync;
 
 public class ThreadInterference {
@@ -20,6 +21,7 @@ public class ThreadInterference {
 	// create different counter types
 	private static Counter counter = new Counter();
 	private static CounterSync counterSync = new CounterSync();
+	private static CounterLock counterLock = new CounterLock();
 	private static CounterAtomic counterAtomic = new CounterAtomic();
 
 	public static void main(String[] args) {
@@ -35,6 +37,7 @@ public class ThreadInterference {
 
 						counter.increment();
 						counterSync.increment();
+						counterLock.increment();
 						counterAtomic.increment();
 					}
 				}
@@ -49,6 +52,7 @@ public class ThreadInterference {
 			}
 			LOGGER.info("Counter = " + counter.getCounter());
 			LOGGER.info("CounterSync = " + counterSync.getCounter());
+			LOGGER.info("CounterLock = " + counterLock.getCounter());
 			LOGGER.info("CounterAtomic = " + counterAtomic.getCounter());
 		} catch (InterruptedException e) {
 			LOGGER.info("thread.join() interrupted: ", e);

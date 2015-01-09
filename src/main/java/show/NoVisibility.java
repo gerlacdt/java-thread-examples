@@ -12,15 +12,14 @@ public class NoVisibility extends Thread {
 
     public static void main(String[] args) throws InterruptedException {
     	NoVisibility t = new NoVisibility();
-        for (int i = 0; i < 1; i++) {
-        	t.start();
-        }
+    	t.start();
         Thread.sleep(1000);
         keepRunning = false;
         LOGGER.info(System.currentTimeMillis() + ": keepRunning is false");
         t.join();
     }
 
+    @Override
     public void run() {
         while (keepRunning) {
         	// I/O is too slow for showcase

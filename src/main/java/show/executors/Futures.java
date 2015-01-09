@@ -27,13 +27,11 @@ public class Futures {
 		});
 		Integer randomNumber;
 		try {
-			randomNumber = future.get();
+			randomNumber = future.get();  // blocking
 			LOGGER.info("randomNumber = " + randomNumber);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			pool.shutdown();

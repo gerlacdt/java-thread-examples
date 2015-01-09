@@ -9,21 +9,21 @@ This code belongs to a short presentation for showing some java thread specific 
 2. Thread Interference (Visiblity, Synchronization / Atomic variables)
   * NoVisiblity (Thread Visibility, volatile etc.)
   * ThreadInterference (Counter, synchronized, AtomicInteger)
+  * ThreadInterferenceMultiCounter (immutable classes are thread safe)
   * CorruptedDateFormatter (SimpleDateFormatter not thread safe)
-  * ImmutableMain (immutable classes are thread safe)
 3. Deadlocks
 4. Executors(Service) / ThreadPools with Futures
   * SimpleExecutors.java
   * Futures (with Callables)
-  * FuturesInvokeAll
   * FuturesTimeOut
+  * FuturesInvokeAll
   * FutureCompletionService
   * FutureGuava
-
+  * FutureGuavaCollectAll
 
 ## License
 
-Copyright © 2014 Daniel Gerlach
+Copyright © 2015 Daniel Gerlach
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
