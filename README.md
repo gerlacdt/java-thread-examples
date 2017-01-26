@@ -1,4 +1,4 @@
-# Java Threads
+# Java Thread Examples
 
 This code belongs to a short presentation for showing some java thread specific stuff
 
